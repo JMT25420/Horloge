@@ -69,6 +69,19 @@
             margin-right: 20px;
             text-align: right;
         }
+
+        #fullscreen-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: white;
+            color: black;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -83,10 +96,26 @@
             <div id="counter">0</div>
         </div>
     </div>
+    <button id="fullscreen-btn">Plein écran</button>
 
     <script>
+        let offset = 0;
+
+        async function fetchOfficialTime() {
+            try {
+                const response = await fetch('http://worldtimeapi.org/api/timezone/Europe/Paris');
+                const data = await response.json();
+                const serverTime = new Date(data.datetime).getTime();
+                const localTime = new Date().getTime();
+                offset = serverTime - localTime;
+                console.log('Time synchronized');
+            } catch (error) {
+                console.error('Failed to fetch official time:', error);
+            }
+        }
+
         function updateClock() {
-            const now = new Date();
+            const now = new Date(new Date().getTime() + offset);
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const seconds = String(now.getSeconds()).padStart(2, '0');
@@ -115,8 +144,21 @@
             document.getElementById('circle3').style.backgroundColor = counterColor === 'green' ? 'green' : 'black';
         }
 
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+
+        document.getElementById('fullscreen-btn').addEventListener('click', toggleFullscreen);
+
         setInterval(updateClock, 1000);
         updateClock();
+
+        setInterval(fetchOfficialTime, 600000); // 600,000 ms = 10 minutes
+        fetchOfficialTime();
     </script>
 </body>
 </html>
