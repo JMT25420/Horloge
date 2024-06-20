@@ -32,13 +32,14 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            margin: 0 10px;
         }
 
         .circle {
             width: 10vw;
             height: 10vw;
             border-radius: 50%;
-            border: 3px solid;
+            border: 6px solid;
             margin: 10px 0;
         }
 
@@ -54,21 +55,29 @@
             border-color: green;
         }
 
+        #counter-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         #counter {
             font-size: calc(16vw + 16vh);
-            margin-top: 20px;
+            margin-left: 20px;
         }
     </style>
 </head>
 <body>
     <div id="clock-container">
         <div id="clock">--:--:--</div>
-        <div id="circles-container">
-            <div id="circle1" class="circle"></div>
-            <div id="circle2" class="circle"></div>
-            <div id="circle3" class="circle"></div>
+        <div id="counter-container">
+            <div id="circles-container">
+                <div id="circle1" class="circle"></div>
+                <div id="circle2" class="circle"></div>
+                <div id="circle3" class="circle"></div>
+            </div>
+            <div id="counter">0</div>
         </div>
-        <div id="counter">0</div>
     </div>
 
     <script>
