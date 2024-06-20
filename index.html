@@ -1,1 +1,138 @@
-<!DOCTYPE html><html lang="fr"><head>    <meta charset="UTF-8">    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <title>Horloge en temps réel avec cadre et compteur</title>    <style>        @font-face {            font-family: 'Mono Italic';            src: url('mono-italic.ttf') format('truetype');        }        body {            display: flex;            justify-content: center;            align-items: center;            height: 100vh;            margin: 0;            font-family: Arial, sans-serif;            background-color: #000000; /* Fond noir */            color: #ffffff; /* Texte blanc */        }        #clock-container {            width: 80%; /* Cadre faisant 80% de la taille de la fenêtre */            height: auto;            display: flex;            flex-direction: column;            align-items: center;            aspect-ratio: 3/1; /* Proportion 3:1 (ajustez selon vos besoins) */        }        #clock {            font-size: 10vmin; /* Ajuster la taille de l'heure en fonction de la largeur de la fenêtre */            font-weight: bold;            font-family: 'Mono Italic', monospace; /* Utiliser une police non proportionnelle */            width: 100%; /* Fixer la largeur pour empêcher les décalages */            text-align: left;            padding: 10px;            box-sizing: border-box;            margin-bottom: 20px;        }        .row {            display: flex;            justify-content: space-between;            width: 100%;        }        #circle-container, #counter-container {            display: flex;            align-items: center;        }        #circle {            width: 15vmin; /* Ajuster la taille du cercle en fonction de la largeur de la fenêtre */            height: 15vmin; /* Ajuster la taille du cercle en fonction de la largeur de la fenêtre */            border-radius: 50%;        }        #counter {            font-size: 8vmin; /* Ajuster la taille du compteur en fonction de la largeur de la fenêtre */            font-weight: bold;            font-family: 'Mono Italic', monospace; /* Utiliser une police non proportionnelle */        }    </style></head><body>    <div id="clock-container">        <div id="clock"></div>        <div class="row">            <div id="circle-container">                <div id="circle"></div>            </div>            <div id="counter-container">                <div id="counter"></div>            </div>        </div>    </div>    <script>        let offset = 0;        // Fonction pour récupérer l'heure du serveur officiel français        async function fetchServerTime() {            try {                const response = await fetch('http://heurelegalefrancaise.fr');                const text = await response.text();                const matches = text.match(/UTC\(OP\)\sTime\s*:\s*(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})/);                if (matches) {                    const serverTime = new Date(matches[1] + 'Z');                    offset = serverTime - new Date();                } else {                    console.error('Impossible d\'extraire l\'heure de la réponse');                }            } catch (error) {                console.error('Erreur lors de la récupération de l\'heure:', error);            }        }        // Fonction pour mettre à jour l'horloge        function updateClock() {            const now = new Date(new Date().getTime() + offset);            const hours = now.getHours().toString().padStart(2, '0');            const minutes = now.getMinutes().toString().padStart(2, '0');            const seconds = now.getSeconds().toString().padStart(2, '0');            const formattedTime = `${hours}:${minutes}:${seconds}`;            document.getElementById('clock').textContent = formattedTime;            // Mettre à jour la couleur du cercle et du compteur en fonction des secondes            const circle = document.getElementById('circle');            const counter = document.getElementById('counter');            let counterValue;            if (seconds >= 0 && seconds <= 19) {                counterValue = seconds; // Incrémentation de 0 à 19                circle.style.backgroundColor = 'green';                counter.style.color = 'green';            } else if (seconds >= 20 && seconds <= 54) {                counterValue = 60 - seconds; // Décrémentation de 40 à 1                circle.style.backgroundColor = 'red';                counter.style.color = 'red';            } else if (seconds >= 55 && seconds <= 59) {                counterValue = 60 - seconds; // Décrémentation de 5 à 1                circle.style.backgroundColor = 'orange';                counter.style.color = 'orange';            }            // Mettre à jour le compteur            counter.textContent = counterValue;        }        // Mettre à jour l'horloge chaque seconde        setInterval(updateClock, 1000);        // Synchroniser l'heure toutes les 10 minutes (600000 millisecondes)        setInterval(fetchServerTime, 600000);        // Appel initial pour afficher l'horloge immédiatement        fetchServerTime();        updateClock();    </script></body></html>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horloge en temps r≈Ωel avec cadre et compteur</title>
+    <style>
+        @font-face {
+            font-family: 'Mono Italic';
+            src: url('mono-italic.ttf') format('truetype');
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #000000; /* Fond noir */
+            color: #ffffff; /* Texte blanc */
+        }
+        #clock-container {
+            width: 80%; /* Cadre faisant 80% de la taille de la fen¬être */
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            aspect-ratio: 3/1; /* Proportion 3:1 (ajustez selon vos besoins) */
+        }
+        #clock {
+            font-size: 10vmin; /* Ajuster la taille de l'heure en fonction de la largeur de la fen¬être */
+            font-weight: bold;
+            font-family: 'Futura', monospace; /* Utiliser une police non proportionnelle */
+            width: 100%; /* Fixer la largeur pour emp¬êcher les d≈Ωcalages */
+            text-align: left;
+            padding: 10px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+        .row {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        #circle-container, #counter-container {
+            display: flex;
+            align-items: center;
+        }
+        #circle {
+            width: 15vmin; /* Ajuster la taille du cercle en fonction de la largeur de la fen¬être */
+            height: 15vmin; /* Ajuster la taille du cercle en fonction de la largeur de la fen¬être */
+            border-radius: 50%;
+        }
+        #counter {
+            font-size: 8vmin; /* Ajuster la taille du compteur en fonction de la largeur de la fen¬être */
+            font-weight: bold;
+            font-family: 'Futura', monospace; /* Utiliser une police non proportionnelle */
+        }
+    </style>
+</head>
+<body>
+    <div id="clock-container">
+        <div id="clock"></div>
+        <div class="row">
+            <div id="circle-container">
+                <div id="circle"></div>
+            </div>
+            <div id="counter-container">
+                <div id="counter"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let offset = 0;
+
+        // Fonction pour r≈Ωcup≈Ωrer l'heure du serveur officiel fran¬çais
+        async function fetchServerTime() {
+            try {
+                const response = await fetch('http://heurelegalefrancaise.fr');
+                const text = await response.text();
+                const matches = text.match(/UTC\(OP\)\sTime\s*:\s*(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})/);
+                if (matches) {
+                    const serverTime = new Date(matches[1] + 'Z');
+                    offset = serverTime - new Date();
+                } else {
+                    console.error('Impossible d\'extraire l\'heure de la r≈Ωponse');
+                }
+            } catch (error) {
+                console.error('Erreur lors de la r≈Ωcup≈Ωration de l\'heure:', error);
+            }
+        }
+
+        // Fonction pour mettre ÀÜ jour l'horloge
+        function updateClock() {
+            const now = new Date(new Date().getTime() + offset);
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            const formattedTime = `${hours}:${minutes}:${seconds}`;
+            document.getElementById('clock').textContent = formattedTime;
+
+            // Mettre ÀÜ jour la couleur du cercle et du compteur en fonction des secondes
+            const circle = document.getElementById('circle');
+            const counter = document.getElementById('counter');
+            let counterValue;
+
+            if (seconds >= 0 && seconds <= 19) {
+                counterValue = seconds; // Incr≈Ωmentation de 0 ÀÜ 19
+                circle.style.backgroundColor = 'green';
+                counter.style.color = 'green';
+            } else if (seconds >= 20 && seconds <= 54) {
+                counterValue = 60 - seconds; // D≈Ωcr≈Ωmentation de 40 ÀÜ 1
+                circle.style.backgroundColor = 'red';
+                counter.style.color = 'red';
+            } else if (seconds >= 55 && seconds <= 59) {
+                counterValue = 60 - seconds; // D≈Ωcr≈Ωmentation de 5 ÀÜ 1
+                circle.style.backgroundColor = 'orange';
+                counter.style.color = 'orange';
+            }
+
+            // Mettre ÀÜ jour le compteur
+            counter.textContent = counterValue;
+        }
+
+        // Mettre ÀÜ jour l'horloge chaque seconde
+        setInterval(updateClock, 1000);
+
+        // Synchroniser l'heure toutes les 10 minutes (600000 millisecondes)
+        setInterval(fetchServerTime, 600000);
+
+        // Appel initial pour afficher l'horloge imm≈Ωdiatement
+        fetchServerTime();
+        updateClock();
+    </script>
+</body>
+</html>
