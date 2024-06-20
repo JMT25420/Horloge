@@ -13,7 +13,7 @@
             background-color: black;
             color: white;
             margin: 0;
-            font-family: 'Courier New', Courier, monospace;
+            font-family: 'Arial Black', Arial, sans-serif;
         }
 
         #clock-container {
@@ -26,12 +26,21 @@
         #clock {
             font-size: calc(10vw + 10vh);
             margin-bottom: 20px;
+            width: 100%;
+            text-align: center;
+        }
+
+        #counter-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
         }
 
         #circles-container {
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: flex-start;
             margin: 0 10px;
         }
 
@@ -55,15 +64,10 @@
             border-color: green;
         }
 
-        #counter-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
         #counter {
             font-size: calc(16vw + 16vh);
-            margin-left: 20px;
+            margin-right: 20px;
+            text-align: right;
         }
     </style>
 </head>
