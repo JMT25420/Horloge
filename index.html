@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Horloge avec cercles</title>
     <style>
+        @font-face {
+            font-family: 'Arial Black';
+            src: url('arial_black.ttf') format('truetype');
+        }
+
         body {
             display: flex;
             justify-content: center;
@@ -103,7 +108,7 @@
 
         async function fetchOfficialTime() {
             try {
-                const response = await fetch('http://worldtimeapi.org/api/timezone/Europe/Paris');
+                const response = await fetch('http://heurelegalefrancaise.fr/api/heure');
                 const data = await response.json();
                 const serverTime = new Date(data.datetime).getTime();
                 const localTime = new Date().getTime();
