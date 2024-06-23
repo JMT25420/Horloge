@@ -132,10 +132,10 @@
 
             if (secondsNum === 0) {
                 counter = 0;
-                counterColor = 'green';
+                counterColor = 'red';
             } else if (secondsNum >= 1 && secondsNum <= 20) {
                 counter = -secondsNum;
-                counterColor = 'green';
+                counterColor = 'red';
             } else if (secondsNum >= 21 && secondsNum <= 59) {
                 counter = 60 - secondsNum;
                 counterColor = secondsNum >= 55 ? 'orange' : 'red';
