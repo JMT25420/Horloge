@@ -73,6 +73,7 @@
             font-size: calc(16vw + 16vh);
             margin-right: 20px;
             text-align: right;
+            color: red;
         }
 
         #fullscreen-btn {
@@ -132,13 +133,10 @@
 
             if (secondsNum === 0) {
                 counter = 0;
-                counterColor = 'red';
             } else if (secondsNum >= 1 && secondsNum <= 20) {
                 counter = -secondsNum;
-                counterColor = 'red';
             } else if (secondsNum >= 21 && secondsNum <= 59) {
                 counter = 60 - secondsNum;
-                counterColor = secondsNum >= 55 ? 'orange' : 'red';
             }
 
             document.getElementById('counter').textContent = counter;
