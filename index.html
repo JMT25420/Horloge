@@ -134,7 +134,7 @@
                 counter = 0;
                 counterColor = 'green';
             } else if (secondsNum >= 1 && secondsNum <= 20) {
-                counter = secondsNum;
+                counter = -secondsNum;
                 counterColor = 'green';
             } else if (secondsNum >= 21 && secondsNum <= 59) {
                 counter = 60 - secondsNum;
@@ -144,9 +144,19 @@
             document.getElementById('counter').textContent = counter;
             document.getElementById('counter').style.color = counterColor;
 
-            document.getElementById('circle1').style.backgroundColor = counterColor === 'red' ? 'red' : 'black';
-            document.getElementById('circle2').style.backgroundColor = counterColor === 'orange' ? 'orange' : 'black';
-            document.getElementById('circle3').style.backgroundColor = counterColor === 'green' ? 'green' : 'black';
+            if (secondsNum >= 21 && secondsNum <= 54) {
+                document.getElementById('circle1').style.backgroundColor = 'red';
+                document.getElementById('circle2').style.backgroundColor = 'black';
+                document.getElementById('circle3').style.backgroundColor = 'black';
+            } else if (secondsNum >= 55 && secondsNum <= 59) {
+                document.getElementById('circle1').style.backgroundColor = 'black';
+                document.getElementById('circle2').style.backgroundColor = 'orange';
+                document.getElementById('circle3').style.backgroundColor = 'black';
+            } else {
+                document.getElementById('circle1').style.backgroundColor = 'black';
+                document.getElementById('circle2').style.backgroundColor = 'black';
+                document.getElementById('circle3').style.backgroundColor = 'green';
+            }
         }
 
         function toggleFullscreen() {
