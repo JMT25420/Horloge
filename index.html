@@ -130,15 +130,15 @@
             let counter;
             let counterColor;
 
-            if (secondsNum < 20) {
+            if (secondsNum === 0) {
+                counter = 0;
+                counterColor = 'green';
+            } else if (secondsNum >= 1 && secondsNum <= 20) {
                 counter = secondsNum;
                 counterColor = 'green';
-            } else if (secondsNum >= 20 && secondsNum < 55) {
+            } else if (secondsNum >= 21 && secondsNum <= 59) {
                 counter = 60 - secondsNum;
-                counterColor = 'red';
-            } else {
-                counter = 60 - secondsNum;
-                counterColor = 'orange';
+                counterColor = secondsNum >= 55 ? 'orange' : 'red';
             }
 
             document.getElementById('counter').textContent = counter;
@@ -150,20 +150,4 @@
         }
 
         function toggleFullscreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
-            } else if (document.exitFullscreen) {
-                document.exitFullscreen();
-            }
-        }
-
-        document.getElementById('fullscreen-btn').addEventListener('click', toggleFullscreen);
-
-        setInterval(updateClock, 1000);
-        updateClock();
-
-        setInterval(fetchOfficialTime, 600000); // 600,000 ms = 10 minutes
-        fetchOfficialTime();
-    </script>
-</body>
-</html>
+      
