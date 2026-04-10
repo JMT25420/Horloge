@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Chrono Rallye NTP</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+<style>
+body {
+    margin: 0;
+    background: black;
+    font-family: Arial Black, Arial, sans-serif;
+    overflow: hidden;
+}
+
+/* Horloge */
+#clock {
+    position: absolute;
+    top: 5%;
+    right: 5%;
+    text-align: right;
+    font-size: 22vw;
+    color: #00ff00;
+    font-weight: bold;
+}
+
+/* Compte à rebours */
+#countdown {
+    position: absolute;
+    bottom: 10%;
+    right: 5%;
+    text-align: right;
+    font-size: 28vw;
+    color: red;
+    font-weight: bold;
+}
+
+/* Feu */
+#lights {
+    position: absolute;
+    left: 5%;
+    top: 35%;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.light {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: #222;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="clock">--:--:--</div>
+
+<div id="lights">
+    <div id="red" class="light"></div>
+    <div id="orange" class="light"></div>
+    <div id="green" class="light"></div>
+</div>
+
+<div id="countdown">0</div>
+
+function update() {
+
+    const now = new Date(Date.now() + offset);
+
+    const h = String(now.getHours()).padStart(2, '0');
+    const m = String(now.getMinutes()).padStart(2, '0');
+    const s = now.getSeconds();
+
+    document.getElementById("clock").innerText =
+        `${h}:${m}:${String(s).padStart(2,'0')}`;
+
+    let cd;
+    if (s <= 20) {
+        cd = -s;
+    } else {
+        cd = 60 - s;
+    }
+
+    document.getElementById("countdown").innerText = cd;
+
+    const red = document.getElementById("red");
+    const orange = document.getElementById("orange");
+    const green = document.getElementById("green");
+
+    red.style.background = "#222";
+    orange.style.background = "#222";
+    green.style.background = "#222";
+
+    if (s <= 20) {
+        green.style.background = "green";
+    } else if (s < 55) {
+        red.style.background = "red";
+    } else {
+        orange.style.background = "orange";
+    }
+}
+
+</body>
+</html>
+
+syncTime();
+setInterval(syncTime, 300000); // toutes les 5 min
+setInterval(update, 1000);
+update();
