@@ -62,6 +62,7 @@ body {
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Chrono Rallye">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     </head>
 
 <body>
@@ -150,7 +151,7 @@ setInterval(syncTime, 10 * 60 * 1000); // resync toutes les 10 min
 /* Boucle stable */
 function loop() {
     update();
-    setTimeout(loop, 1000);
+    setInterval(loop, 1000);
 }
 
 loop();
