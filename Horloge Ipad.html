@@ -114,7 +114,9 @@ function update() {
 /* Boucle stable */
 function loop() {
     update();
-    setTimeout(loop, 1000);
+
+    const delay = 1000 - (Date.now() % 1000);
+    setTimeout(loop, delay);
 }
 
 loop();
