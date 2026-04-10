@@ -12,10 +12,6 @@ body {
     background: black;
     font-family: Arial Black, Arial, sans-serif;
     overflow: hidden;
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
 }
 
 /* Horloge */
@@ -24,7 +20,7 @@ body {
     top: 5%;
     right: 5%;
     text-align: right;
-    font-size: 16vw;
+    font-size: 20vw;
     color: #00ff00;
     font-weight: bold;
 }
@@ -56,14 +52,13 @@ body {
     border-radius: 50%;
     background: #222;
 }
-
 </style>
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Chrono Rallye">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    </head>
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Chrono Rallye">
+
+</head>
 
 <body>
 
@@ -79,38 +74,9 @@ body {
 
 <script>
 
-let timeOffset = 0; // différence serveur - local
-let synced = false;
-
-async function syncTime() {
-    try {
-        const t0 = Date.now();
-
-        const res = await fetch("https://worldtimeapi.org/api/timezone/Europe/Paris");
-        const data = await res.json();
-
-        const t1 = Date.now();
-
-        // heure serveur en ms
-        const serverTime = new Date(data.utc_datetime).getTime();
-
-        // compensation latence (approx NTP simplifié)
-        const localMid = (t0 + t1) / 2;
-
-        timeOffset = serverTime - localMid;
-        synced = true;
-
-        console.log("Synchro OK, offset ms:", timeOffset);
-
-    } catch (e) {
-        console.log("Synchro impossible, mode offline", e);
-        synced = false;
-    }
-}
-
 function update() {
 
-    const now = new Date(Date.now() + timeOffset);
+    const now = new Date();
 
     const h = String(now.getHours()).padStart(2, '0');
     const m = String(now.getMinutes()).padStart(2, '0');
@@ -145,13 +111,10 @@ function update() {
     }
 }
 
-syncTime(); // première synchro
-setInterval(syncTime, 10 * 60 * 1000); // resync toutes les 10 min
-
 /* Boucle stable */
 function loop() {
     update();
-    setInterval(loop, 1000);
+    setTimeout(loop, 1000);
 }
 
 loop();
