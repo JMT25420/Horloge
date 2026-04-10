@@ -78,9 +78,38 @@ body {
 
 <script>
 
+let timeOffset = 0; // différence serveur - local
+let synced = false;
+
+async function syncTime() {
+    try {
+        const t0 = Date.now();
+
+        const res = await fetch("https://worldtimeapi.org/api/timezone/Europe/Paris");
+        const data = await res.json();
+
+        const t1 = Date.now();
+
+        // heure serveur en ms
+        const serverTime = new Date(data.utc_datetime).getTime();
+
+        // compensation latence (approx NTP simplifié)
+        const localMid = (t0 + t1) / 2;
+
+        timeOffset = serverTime - localMid;
+        synced = true;
+
+        console.log("Synchro OK, offset ms:", timeOffset);
+
+    } catch (e) {
+        console.log("Synchro impossible, mode offline", e);
+        synced = false;
+    }
+}
+
 function update() {
 
-    const now = new Date();
+    const now = new Date(Date.now() + timeOffset);
 
     const h = String(now.getHours()).padStart(2, '0');
     const m = String(now.getMinutes()).padStart(2, '0');
@@ -114,6 +143,9 @@ function update() {
         orange.style.background = "orange";
     }
 }
+
+syncTime(); // première synchro
+setInterval(syncTime, 10 * 60 * 1000); // resync toutes les 10 min
 
 /* Boucle stable */
 function loop() {
