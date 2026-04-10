@@ -2,41 +2,44 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Chrono Rallye Pro</title>
+<title>Chrono Rallye NTP</title>
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 
 <style>
-html, body {
+body {
     margin: 0;
     background: black;
+    font-family: Arial Black, Arial, sans-serif;
     overflow: hidden;
-    height: 100vh;
-    font-family: Arial, sans-serif;
 }
 
-/* =========================
-   LAYOUT
-========================= */
-
+/* Horloge */
 #clock {
     position: absolute;
     top: 5%;
-    right: 5%;
+    right: 3%;
+    text-align: right;
+    font-size: 18vw;
+    color: #00ff00;
+    font-weight: bold;
 }
 
+/* Compte à rebours */
 #countdown {
     position: absolute;
     bottom: 10%;
     right: 5%;
+    text-align: right;
+    font-size: 28vw;
+    color: red;
+    font-weight: bold;
 }
 
+/* Feu */
 #lights {
     position: absolute;
-    left: 5%;
+    left: 3%;
     top: 20%;
     display: flex;
     flex-direction: column;
@@ -49,53 +52,17 @@ html, body {
     border-radius: 50%;
     background: #222;
 }
-
-/* =========================
-   7 SEGMENTS DISPLAY
-========================= */
-
-.display {
-    display: flex;
-    gap: 1vw;
-}
-
-/* digit container */
-.digit {
-    position: relative;
-    width: 10vw;
-    height: 18vw;
-}
-
-/* segment base */
-.seg {
-    position: absolute;
-    background: #111;
-    transition: 0.15s;
-    border-radius: 0.3vw;
-}
-
-/* ON state */
-.on {
-    background: #00ff00;
-    box-shadow: 0 0 1vw #00ff00;
-}
-
-/* segment positions */
-.a { top: 0; left: 2vw; width: 6vw; height: 1.2vw; }
-.b { top: 1vw; right: 0; width: 1.2vw; height: 7vw; }
-.c { bottom: 1vw; right: 0; width: 1.2vw; height: 7vw; }
-.d { bottom: 0; left: 2vw; width: 6vw; height: 1.2vw; }
-.e { bottom: 1vw; left: 0; width: 1.2vw; height: 7vw; }
-.f { top: 1vw; left: 0; width: 1.2vw; height: 7vw; }
-.g { top: 8vw; left: 2vw; width: 6vw; height: 1.2vw; }
-
 </style>
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Chrono Rallye">
+
 </head>
 
 <body>
 
-<div id="clock" class="display"></div>
-<div id="countdown" class="display"></div>
+<div id="clock">--:--:--</div>
 
 <div id="lights">
     <div id="red" class="light"></div>
@@ -103,81 +70,30 @@ html, body {
     <div id="green" class="light"></div>
 </div>
 
+<div id="countdown">0</div>
+
 <script>
-
-/* =========================
-   7 SEGMENT MAP
-========================= */
-
-const segMap = {
-    "0": [1,1,1,1,1,1,0],
-    "1": [0,1,1,0,0,0,0],
-    "2": [1,1,0,1,1,0,1],
-    "3": [1,1,1,1,0,0,1],
-    "4": [0,1,1,0,0,1,1],
-    "5": [1,0,1,1,0,1,1],
-    "6": [1,0,1,1,1,1,1],
-    "7": [1,1,1,0,0,0,0],
-    "8": [1,1,1,1,1,1,1],
-    "9": [1,1,1,1,0,1,1],
-    ":": [0,0,0,0,0,0,0],
-    "-": [0,0,0,0,0,0,1]
-};
-
-/* =========================
-   BUILD DISPLAY
-========================= */
-
-function createDigit(char) {
-    const digit = document.createElement("div");
-    digit.className = "digit";
-
-    const segments = ["a","b","c","d","e","f","g"];
-    const state = segMap[char] || segMap["-"];
-
-    segments.forEach((s, i) => {
-        const seg = document.createElement("div");
-        seg.className = "seg " + s;
-        if (state[i]) seg.classList.add("on");
-        digit.appendChild(seg);
-    });
-
-    return digit;
-}
-
-function render(display, text) {
-    display.innerHTML = "";
-    for (let c of text) {
-        display.appendChild(createDigit(c));
-    }
-}
-
-/* =========================
-   CLOCK + COUNTDOWN
-========================= */
 
 function update() {
 
     const now = new Date();
 
-    const h = String(now.getHours()).padStart(2,'0');
-    const m = String(now.getMinutes()).padStart(2,'0');
-    const s = String(now.getSeconds()).padStart(2,'0');
+    const h = String(now.getHours()).padStart(2, '0');
+    const m = String(now.getMinutes()).padStart(2, '0');
+    const s = now.getSeconds();
 
-    render(document.getElementById("clock"), `${h}:${m}:${s}`);
+    document.getElementById("clock").innerText =
+        `${h}:${m}:${String(s).padStart(2,'0')}`;
 
-    let sec = now.getSeconds();
     let cd;
-
-    if (sec <= 20) {
-        cd = -sec;
+    if (s <= 20) {
+        cd = -s;
     } else {
-        cd = 60 - sec;
+        cd = 60 - s;
     }
 
-    render(document.getElementById("countdown"), String(cd));
+    document.getElementById("countdown").innerText = cd;
 
-    /* lights */
     const red = document.getElementById("red");
     const orange = document.getElementById("orange");
     const green = document.getElementById("green");
@@ -186,29 +102,24 @@ function update() {
     orange.style.background = "#222";
     green.style.background = "#222";
 
-    if (sec <= 20) {
+    if (s <= 20) {
         green.style.background = "green";
-    } else if (sec < 55) {
+    } else if (s < 55) {
         red.style.background = "red";
     } else {
         orange.style.background = "orange";
     }
 }
 
-/* =========================
-   SYNC ON NEXT SECOND
-========================= */
+/* Boucle stable */
+function loop() {
+    update();
 
-function startAligned() {
-    const ms = 1000 - (Date.now() % 1000);
-
-    setTimeout(() => {
-        update();
-        setInterval(update, 1000);
-    }, ms);
+    const delay = 1000 - (Date.now() % 1000);
+    setTimeout(loop, delay);
 }
 
-startAligned();
+loop();
 
 </script>
 
