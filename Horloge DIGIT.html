@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Chrono Rallye SVG</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<style>
+body {
+    margin: 0;
+    background: black;
+    overflow: hidden;
+}
+
+/* LAYOUT */
+#clock {
+    position: absolute;
+    top: 5%;
+    right: 5%;
+    display: flex;
+    gap: 1vw;
+}
+
+#countdown {
+    position: absolute;
+    bottom: 10%;
+    right: 5%;
+    display: flex;
+    gap: 1vw;
+}
+
+svg {
+    width: 8vw;
+    height: auto;
+}
+
+/* couleurs */
+.on-green { fill: #00ff00 !important; filter: drop-shadow(0 0 5px #00ff00); }
+.on-red   { fill: red !important; filter: drop-shadow(0 0 5px red); }
+
+.off { fill: #111 !important; }
+
+</style>
+</head>
+
+<body>
+
+<div id="clock"></div>
+<div id="countdown"></div>
+
+<script>
+
+/* =========================
+   TON SVG (transformé en template)
+========================= */
+
+const svgTemplate = `
+<svg viewBox="0 0 200 300">
+<g>
+<path class="seg a" d="M 131.99 96.37 ..."/>
+<path class="seg b" d="M 156.43 154.40 ..."/>
+<path class="seg c" d="M 140.90 177.32 ..."/>
+<path class="seg d" d="M 125.65 276.79 ..."/>
+<path class="seg e" d="M 59.22 191.29 ..."/>
+<path class="seg f" d="M 44.84 166.21 ..."/>
+<path class="seg g" d="M 61.28 185.77 ..."/>
+</g>
+</svg>
+`;
+
+/* =========================
+   MAP 7 SEGMENTS
+========================= */
+
+const map = {
+  "0": ["a","b","c","d","e","f"],
+  "1": ["b","c"],
+  "2": ["a","b","g","e","d"],
+  "3": ["a","b","g","c","d"],
+  "4": ["f","g","b","c"],
+  "5": ["a","f","g","c","d"],
+  "6": ["a","f","g","e","c","d"],
+  "7": ["a","b","c"],
+  "8": ["a","b","c","d","e","f","g"],
+  "9": ["a","b","c","d","f","g"],
+  "-": ["g"]
+};
+
+/* =========================
+   CREATE DIGIT
+========================= */
+
+function createDigit() {
+    const div = document.createElement("div");
+    div.innerHTML = svgTemplate;
+    return div.firstElementChild;
+}
+
+/* =========================
+   SET DIGIT VALUE
+========================= */
+
+function setDigit(svg, value, colorClass) {
+
+    const active = map[value] || [];
+
+    svg.querySelectorAll(".seg").forEach(seg => {
+        const name = seg.classList[1];
+
+        seg.classList.remove("on-green", "on-red");
+        seg.classList.add("off");
+
+        if (active.includes(name)) {
+            seg.classList.remove("off");
+            seg.classList.add(colorClass);
+        }
+    });
+}
+
+/* =========================
+   BUILD DISPLAYS
+========================= */
+
+function buildDisplay(container, count) {
+    const digits = [];
+    for (let i = 0; i < count; i++) {
+        const d = createDigit();
+        container.appendChild(d);
+        digits.push(d);
+    }
+    return digits;
+}
+
+const clockDigits = buildDisplay(document.getElementById("clock"), 6);
+const countdownDigits = buildDisplay(document.getElementById("countdown"), 2);
+
+/* =========================
+   UPDATE
+========================= */
+
+function update() {
+
+    const now = new Date();
+
+    const h = String(now.getHours()).padStart(2,'0');
+    const m = String(now.getMinutes()).padStart(2,'0');
+    const s = String(now.getSeconds()).padStart(2,'0');
+
+    const time = h + m + s;
+
+    for (let i = 0; i < 6; i++) {
+        setDigit(clockDigits[i], time[i], "on-green");
+    }
+
+    let sec = now.getSeconds();
+    let cd = (sec <= 20) ? -sec : 60 - sec;
+
+    const cdStr = String(Math.abs(cd)).padStart(2,'0');
+
+    setDigit(countdownDigits[0], cdStr[0], "on-red");
+    setDigit(countdownDigits[1], cdStr[1], "on-red");
+}
+
+/* =========================
+   SYNC SECONDE PLEINE
+========================= */
+
+function start() {
+    const delay = 1000 - (Date.now() % 1000);
+
+    setTimeout(() => {
+        update();
+        setInterval(update, 1000);
+    }, delay);
+}
+
+start();
+
+</script>
+
+</body>
+</html>
